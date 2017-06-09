@@ -15,6 +15,15 @@
 
 	<dependencies>
 
+		<!-- Link backend project -->
+		
+		<dependency>
+			<groupId>ag.alten</groupId>
+			<artifactId>shoppingbackend</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+
 		<!-- JAVA EE API -->
 
 		<dependency>
@@ -38,15 +47,15 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
-		
+
 		<!-- JSTL -->
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
-		
+
+
 
 	</dependencies>
 	<build>
