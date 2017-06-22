@@ -1,4 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
@@ -23,7 +24,7 @@
 
 <script>
 	window.menu = '${title}';
-	
+
 	window.contextRoot = '${contextRoot}';
 </script>
 
@@ -52,54 +53,51 @@
 	<div class="wrapper">
 
 		<!-- Navigation -->
-		<%@include file="./shared/navbar.jsp"%>
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span> <span
+							class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="${contextRoot}/home">Home</a>
+				</div>
+				<!-- /.navbar-collapse -->
+			</div>
+			<!-- /.container -->
+		</nav>
 
 		<!-- Page Content -->
 
 		<div class="content">
-
-			<c:if test="${userClickHome== true}">
-				<%@include file="home.jsp"%>
-			</c:if>
-
-			<c:if test="${userClickAbout== true}">
-				<%@include file="about.jsp"%>
-			</c:if>
-
-			<c:if test="${userClickContact== true}">
-				<%@include file="contact.jsp"%>
-			</c:if>
 			
-			<c:if test="${userClickAllProducts == true or userClickCategoryProducts == true}">
-				<%@include file="listProducts.jsp"%>
-			</c:if>
+			<div class="container">
 			
-			<c:if test="${userClickShowProduct == true}">
-				<%@include file="singleProduct.jsp"%>
-			</c:if>
+				<div class="row">
+					
+					<div class="col-xs-12">
+						
+						<div class="jumbotron">
+							<h1>${errorTitle}</h1>
+							
+							<blockquote style="word-wrap:break-word">
+								${description}
+							</blockquote>
+						</div>
+							
+					</div>
+				
+				</div>
+			
+			</div>
 
 		</div>
 		<!-- footer -->
 		<%@include file="./shared/footer.jsp"%>
 
-
-		<!-- /.container -->
-
-		<!-- jQuery -->
-		<script src="${js}/jquery.js"></script>
-
-		<!-- Bootstrap Core JavaScript -->
-		<script src="${js}/bootstrap.min.js"></script>
-
-		<!-- JavaScript -->
-		<script src="${js}/myapp.js"></script>
-		
-		<!-- DataTables -->
-		<script src="${js}/jquery.dataTables.js"></script>
-		
-		<!-- DataTables Bootstrap Script -->
-		<script src="${js}/dataTables.bootstrap.js"></script>
-		
 	</div>
 </body>
 

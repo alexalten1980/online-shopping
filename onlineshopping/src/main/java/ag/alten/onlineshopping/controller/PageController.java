@@ -1,27 +1,38 @@
 package ag.alten.onlineshopping.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ag.alten.onlineshopping.exception.ProductNotFoundException;
 import ag.alten.shoppingbackend.dao.CategoryDAO;
+import ag.alten.shoppingbackend.dao.ProductDAO;
 import ag.alten.shoppingbackend.dto.Category;
+import ag.alten.shoppingbackend.dto.Product;
 
 @Controller
 public class PageController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(PageController.class);
 	
 	@Autowired
 	private CategoryDAO categoryDAO;
+	
+	@Autowired
+	private ProductDAO productDao;
 	
 	@RequestMapping(value = { "/", "/home", "/index" })
 	public ModelAndView index() {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("title", "Home");
 		mv.addObject("userClickHome", true);
+		
+		logger.info("Inside PageController index method - INFO");
+		logger.debug("Inside PageController index method - DEGUG");
 		
 		//passo la lista di categorie
 		mv.addObject("categorie", categoryDAO.list());
@@ -51,7 +62,7 @@ public class PageController {
 		//prende una categoria singola
 		categoria = categoryDAO.get(id);
 	
-		mv.addObject("title", categoria.getNome());
+		mv.addObject("title", categoria.getName());
 		
 		//passo la lista di categorie
 		mv.addObject("categorie", categoryDAO.list());
@@ -80,6 +91,26 @@ public class PageController {
 		mv.addObject("title", "Contact Us");
 		mv.addObject("userClickContact", true);
 
+		return mv;
+	}
+	
+	@RequestMapping(value = "/show/{id}/product")
+	public ModelAndView showProduct(@PathVariable int id) throws ProductNotFoundException {
+		ModelAndView mv = new ModelAndView("page");
+		
+		Product product = productDao.get(id);
+		
+		if(product == null) throw new ProductNotFoundException();
+			
+		product.setViews(product.getViews() + 1);
+		
+		productDao.update(product);
+		
+		mv.addObject("title", product.getName());
+		mv.addObject("prodotto", product);
+		
+		mv.addObject("userClickShowProduct", true);
+		
 		return mv;
 	}
 
