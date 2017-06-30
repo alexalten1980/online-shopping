@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 
 <spring:url var="css" value="/resources/css" />
 <spring:url var="js" value="/resources/js" />
@@ -18,6 +19,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
+
+<!-- necessario per le chiamate ajax si si utilizza check csrf -->
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 
 <title>Online Shopping - ${title}</title>
 
@@ -77,6 +82,10 @@
 			<c:if test="${userClickShowProduct == true}">
 				<%@include file="singleProduct.jsp"%>
 			</c:if>
+			
+			<c:if test="${userClickManageProducts == true}">
+				<%@include file="manageProducts.jsp"%>
+			</c:if>
 
 		</div>
 		<!-- footer -->
@@ -99,6 +108,15 @@
 		
 		<!-- DataTables Bootstrap Script -->
 		<script src="${js}/dataTables.bootstrap.js"></script>
+		
+		<!-- Bootbox -->
+		<script src="${js}/bootbox.min.js"></script>
+		
+		<!-- Validate -->
+		<script src="${js}/jquery.validate.js"></script>
+		
+		<!-- Validate min 
+		<script src="${js}/jquery.validate.min.js"></script> -->
 		
 	</div>
 </body>

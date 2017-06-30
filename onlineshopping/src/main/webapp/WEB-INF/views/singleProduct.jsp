@@ -30,7 +30,7 @@
 				Prezzo: <strong>${prodotto.unitPrice} &euro;</strong>
 			</h5>
 			<hr />
-
+			
 			<c:choose>
 				<c:when test="${prodotto.quantity < 1}">
 					<h6>
@@ -43,20 +43,28 @@
 			</c:choose>
 
 			<a href="${contextRoot}/show/all/products" class="btn btn-primary">Indietro</a>
-
-			<c:choose>
-				<c:when test="${prodotto.quantity < 1}">
-					<a href="javascript:void(0)" class="btn btn-success disabled"> 
-					<strike>
-						<span class="glyphicon glyphicon-shopping-cart"></span> Aggiungi al carrello
-					</strike>
-					</a>
-				</c:when>
-				<c:otherwise>
-					<a href="${contextRoot}/add/cart/${prodotto.id}/product" class="btn btn-success"> 
-					<span class="glyphicon glyphicon-shopping-cart"></span>Aggiungi al carrello</a>
-				</c:otherwise>
-			</c:choose>
+			
+			<security:authorize access="hasAuthority('USER')">
+				<c:choose>
+					<c:when test="${prodotto.quantity < 1}">
+						<a href="javascript:void(0)" class="btn btn-success disabled"> 
+						<strike>
+							<span class="glyphicon glyphicon-shopping-cart"></span> Aggiungi al carrello
+						</strike>
+						</a>
+					</c:when>
+					<c:otherwise>
+						<a href="${contextRoot}/add/cart/${prodotto.id}/product" class="btn btn-success"> 
+						<span class="glyphicon glyphicon-shopping-cart"></span>Aggiungi al carrello</a>
+					</c:otherwise>
+				</c:choose>
+			</security:authorize>
+			
+			<security:authorize access="hasAuthority('ADMIN')">
+				<a href="${contextRoot}/manage/${prodotto.id}/product" class="btn btn-warning"> 
+						<span class="glyphicon glyphicon-pencil"></span>Modifica</a>
+			</security:authorize>
+			
 		</div>
 
 	</div>

@@ -1,0 +1,71 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security.xsd 
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd">
+
+	
+	<context:component-scan base-package="ag.alten.shoppingbackend"></context:component-scan>
+	
+	<!-- codifica password, da inserire autowired in RegisterHandler -->
+	<beans:bean id="passwordEncoder" 
+	class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
+	<http pattern="/resources/**" security="none" />
+	
+	<http>
+		<!-- permettere l'accesso a tutti alla pagina di login -->
+		<!-- <intercept-url pattern="/login" access="permitAll" /> -->
+		
+		<!-- specifica che se si vuole accedere su manage bisogna essere admin  - sotto /manage -->
+		<intercept-url pattern="/manage/**" access="hasAuthority('ADMIN')"/>
+		
+		<!-- specifica che si vuole accedere su cart bisogna essere user - sotto /cart --> 
+		<intercept-url pattern="/cart/**" access="hasAuthority('ADMIN')"/>
+		
+		<!-- se NON si vuole evitare di specificare il role_ anteposto all'authorities 
+		<intercept-url pattern="/**" access="hasRole('USER')" /> -->
+		
+		<!-- se si vuole evitare di specificare il role_ anteposto all'authorities 
+		dell'authentication-manager. Specifica che se si vuole accedere 
+		alle altre pagine bisogna prima autenticarsi. Non permette l'accesso 
+		a nessuna pagina se non si è autenticati con rol USER, 
+		fa solo eccezione la pagina riportata sopra permitAll, ovvero /login -->
+		<!-- <intercept-url pattern="/**" access="hasAuthority('USER')" />  -->
+		
+		<!-- si permette l'accesso a tutta l'applicazione -->
+		<intercept-url pattern="/**" access="permitAll" />  
+		
+		<!-- se si vuole modificare i nomi dei parametri di default utilizzati per
+		l'autenticazione utilizzare: username-parameter - password-parameter  --> 
+		<form-login login-page="/login" />
+		
+		<!-- disabilitare il controllo csfr (sconsigliato) -->
+		<!-- <csrf disabled="true"/>  -->
+		
+		<access-denied-handler error-page="/errorpage"/>
+		
+		<logout />
+	</http>
+	
+	<authentication-manager>
+		<authentication-provider>
+			<password-encoder ref="passwordEncoder"></password-encoder>
+			
+			<!-- pagina di login automatica senza utilizzare connessione al server -->
+			<!-- <user-service>
+				<user name="alex" password="alexalex" authorities="ROLE_USER, ROLE_ADMIN" />
+			</user-service> -->
+			<jdbc-user-service data-source-ref="dataSource"
+			users-by-username-query="select email, password, enabled from user_detail where email = ?" 
+			authorities-by-username-query="select email, role from user_detail where email = ?" />
+			
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

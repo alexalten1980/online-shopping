@@ -1,11 +1,18 @@
 package ag.alten.onlineshopping.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ag.alten.onlineshopping.exception.ProductNotFoundException;
@@ -113,6 +120,53 @@ public class PageController {
 		
 		return mv;
 	}
+	
+	@RequestMapping(value = "/register")
+	public ModelAndView register() {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("title", "Register");
+		return mv;
+	}
+	
+	@RequestMapping(value = "/login")
+	public ModelAndView loging(@RequestParam(value="error",required=false) String error,
+			@RequestParam(value="logout",required=false) String logout) {
+		ModelAndView mv = new ModelAndView("login");
+		
+		if (error != null) {
+			mv.addObject("message", "Autenticazione non riuscita username e/o password errati");
+		}
+		
+		if (logout != null) {
+			mv.addObject("logout", "Hai effettuato il logout correttamente");
+		}
+		
+		mv.addObject("title", "Login");
+		return mv;
+	}
+	
+	@RequestMapping(value="/errorpage")
+	public ModelAndView accessDenied(){
+		ModelAndView mv = new ModelAndView("error");
+		mv.addObject("title", "Error - 404");
+		mv.addObject("errorTitle", "Accesso Negato");
+		mv.addObject("description", "Non sei autorizzato ad accedere");
+		return mv;
+	}
+	
+	//logout
+	@RequestMapping(value="/perform-logout")
+	public String logout(HttpServletRequest request, HttpServletResponse response){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		if(auth!=null){
+			new SecurityContextLogoutHandler().logout(request, response, auth);
+		}
+		
+		return "redirect:login?logout";
+	}
+	
 
 //	@RequestMapping(value = { "/", "/home", "/index" })
 //	public ModelAndView index() {
